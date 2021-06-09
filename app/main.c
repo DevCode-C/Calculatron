@@ -15,34 +15,30 @@ Brief.- Punto de entrada del programa
 -------------------------------------------------------------------------------------------------*/
 
 #define strlen_p(x) strlen((const char*)x)
+#define SPACE       32  //  "space -> ' ' "
+#define PER         42  //  " * "
+#define ADD         43  //  " + "
+#define MINUS       45  //  " - "
+#define DIV         47  //  " / "
 
 
-const uint8_t* msgError     =(uint8_t*)"ERROR\n";
-const uint8_t* msgOk        =(uint8_t*)"OK\n";
-const uint8_t* Comando      =(uint8_t*)"XMAS=";
+const uint8_t* msgError   =    (uint8_t*)"ERROR\n";
 
-const uint8_t* secuencias[7] = {(uint8_t*)"blinky,",
-                                (uint8_t*)"altern,",
-                                (uint8_t*)"rolling,",
-                                (uint8_t*)"kit,",
-                                (uint8_t*)"car,",
-                                (uint8_t*)"none,"
-};
-
-void (*prtFunctions[7])(void) = {blinky,altern,rolling,kit,car,none};
+const uint8_t* comando[5] =    {(uint8_t*)"SUM",
+                                (uint8_t*)"SUB",
+                                (uint8_t*)"MUL",
+                                (uint8_t*)"DIV",
+                                                };
 
 UART_HandleTypeDef UartHandle;
 __IO ITStatus uartState = RESET;
 __IO ITStatus status = RESET;
-__IO HAL_StatusTypeDef flag_String = HAL_BUSY;
 
 
 uint8_t RxByte;
 uint8_t RxBuffer[30];
 uint32_t tickTimer; 
-uint16_t timer = 100;
-uint16_t timer_temp = 0;
-uint8_t function_list = 5;
+
 
 void UART_Init(void);
 
@@ -57,96 +53,13 @@ int main( void )
         if (status == SET )
         {
             status = RESET;
-            
-            if (!memcmp(RxBuffer,Comando,strlen_p(Comando)))
-            {
-                memcpy(RxBuffer,&RxBuffer[strlen_p(Comando)],(sizeof(RxBuffer) - sizeof(Comando)));
-
-                for (uint8_t i = 0; i < 7; i++)
-                {
-                    if (!memcmp(RxBuffer,secuencias[i],strlen_p(secuencias[i])))
-                    {
-                        flag_String = HAL_OK;
-                        memcpy(RxBuffer,&RxBuffer[strlen_p(secuencias[i])],(sizeof(RxBuffer)-sizeof(secuencias[i])));
-                        function_list = i;
-                        break;
-                    }  
-                    else
-                    {
-                        flag_String = HAL_ERROR;
-                        function_list = 5;
-                    }
-                    
-                }
-                if (flag_String == HAL_OK)
-                {
-                    for (uint8_t i = 0; i < strlen_p(RxBuffer)-1; i++)
-                    {
-                        if (!isdigit(RxBuffer[i]))
-                        {
-                            timer_temp = 1;
-                            break;
-                        }
-                        else
-                        {
-                            timer_temp = atoi((const char *)RxBuffer);
-                        }
-                    }
-                    
-                    if (timer_temp > 99 && timer_temp < 1001)
-                    {
-                        timer = timer_temp;
-                        HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgOk,strlen_p(msgOk));
-                    }
-                    else
-                    {
-                        HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
-                        function_list = 5;
-                        timer = 100;
-                    }
-                }
-                else
-                {
-                    HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
-                }
-                
-                
-            }
-            else
-            {
-                HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
-                function_list = 5;
-            }
-            
-            
-            
+            HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
         }
 
-        if (HAL_GetTick() - tickTimer > timer)
+        if (HAL_GetTick() - tickTimer > 100)
         {
             tickTimer = HAL_GetTick();
             HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
-            switch (function_list)
-            {
-                case 0:
-                    blinky();
-                    break;
-                case 1:
-                    altern();
-                    break;
-                case 2:
-                    rolling();
-                    break;
-                case 3:
-                    kit();
-                    break;
-                case 4:
-                    car();
-                    break;
-                case 5:
-                    none();
-                    break;
-            }
         }
         
         
