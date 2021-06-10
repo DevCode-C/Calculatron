@@ -31,14 +31,15 @@ const uint8_t* comando[5] =    {(uint8_t*)"SUM",
                                                 };
 
 UART_HandleTypeDef UartHandle;
-__IO ITStatus uartState = RESET;
+__IO ITStatus uartState = SET;
 __IO ITStatus status = RESET;
 
 
 uint8_t RxByte;
-uint8_t RxBuffer[30];
+uint8_t RxBuffer[30] = {0};
+uint8_t RxBufferTemp[30] = {0};
 uint32_t tickTimer; 
-
+uint8_t spce[] = {" "};
 
 void UART_Init(void);
 
@@ -52,8 +53,29 @@ int main( void )
 
         if (status == SET )
         {
+            strcpy((char*)RxBufferTemp,(const char*)RxBuffer);
             status = RESET;
-            HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
+            char *temp = strtok((char*)RxBufferTemp," "); 
+            
+            if (temp != NULL)
+            {
+                while (temp != NULL)
+                {
+                    
+                    
+                    if (uartState == SET)
+                    {
+                        uartState = RESET;
+                        HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)temp,strlen_p(temp));
+                        temp = strtok(NULL," "); 
+                    }
+                    
+                    
+
+                }
+                
+            }
+                
         }
 
         if (HAL_GetTick() - tickTimer > 100)
