@@ -23,8 +23,9 @@ Brief.- Punto de entrada del programa
 
 
 const uint8_t* msgError   =    (uint8_t*)"ERROR\n";
+const uint8_t* msgOk   =    (uint8_t*)"OK\n";
 
-const uint8_t* comando[5] =    {(uint8_t*)"SUM",
+const uint8_t* comando[4] =    {(uint8_t*)"SUM",
                                 (uint8_t*)"SUB",
                                 (uint8_t*)"MUL",
                                 (uint8_t*)"DIV",
@@ -33,20 +34,24 @@ const uint8_t* comando[5] =    {(uint8_t*)"SUM",
 UART_HandleTypeDef UartHandle;
 __IO ITStatus uartState = SET;
 __IO ITStatus status = RESET;
+__IO HAL_StatusTypeDef flag = HAL_OK;
 
 
 uint8_t RxByte;
 uint8_t RxBuffer[30] = {0};
 uint8_t RxBufferTemp[30] = {0};
+uint8_t dec[10] = {0};
 uint32_t tickTimer; 
-uint8_t spce[] = {" "};
 
 void UART_Init(void);
+
 
 int main( void )
 {
     HAL_Init( );
     UART_Init();
+
+    char *temp = NULL;
     tickTimer = HAL_GetTick();
     for (; ;)
     {
@@ -55,27 +60,68 @@ int main( void )
         {
             strcpy((char*)RxBufferTemp,(const char*)RxBuffer);
             status = RESET;
-            char *temp = strtok((char*)RxBufferTemp," "); 
+            temp = strtok((char*)RxBufferTemp," "); 
             
             if (temp != NULL)
             {
-                while (temp != NULL)
-                {
+                // for (uint8_t i = 0; i < 4; i++)
+                // {
+                //     if (strcmp((const char *)comando[i],temp) == 0)
+                //     {
+                //         flag = HAL_OK;
+                //         break;
+                //     }
+                //     else
+                //     {
+                //         flag = HAL_ERROR;
+                //     }
+                // }
+                // if (/*uartState &&*/ flag == HAL_OK)
+                // {
+                //     // uartState = RESET;
+                //     // sprintf(dec,"%d",number_digits(-2));
+                //     // DecToStr(dec,13);
+                //     // HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)dec,strlen_p(dec));
+                //     temp = strtok(NULL," ");
+                //     if (temp != NULL)
+                //     {
+                //         do
+                //         {
+                //             if (*temp >= '0' && *temp <= '9')
+                //             {
+                //                 flag = HAL_OK;
+                //             }
+                //             else
+                //             {
+                //                 flag = HAL_ERROR;
+                //                 break;
+                //             }
+                            
+                //             temp++;
+                            
+                //         } while (*temp == '\0');
+                        
+                //         // HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)temp,strlen_p(temp));
+                //     }
                     
-                    
-                    if (uartState == SET)
-                    {
-                        uartState = RESET;
-                        HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)temp,strlen_p(temp));
-                        temp = strtok(NULL," "); 
-                    }
-                    
-                    
+                // }
+                // else if (uartState && flag == HAL_ERROR)
+                // {
+                //     uartState = RESET;
+                //     HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
+                //     temp = NULL;
+                // }
 
+                if (checkComando(comando,(uint8_t*)temp) == HAL_OK)
+                {
+                    HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgOk,strlen_p(msgOk));
                 }
+                else 
+                {
+                    HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
+                }                
                 
             }
-                
         }
 
         if (HAL_GetTick() - tickTimer > 100)
@@ -104,8 +150,6 @@ void UART_Init()
     HAL_UART_Init(&UartHandle);
     HAL_UART_Receive_IT(&UartHandle,&RxByte,1);
 }
-
-
 
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)

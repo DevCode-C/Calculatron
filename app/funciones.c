@@ -6,66 +6,70 @@
 #include "stm32f0xx_hal_rcc.h"
 #include "funciones.h"
 
-void blinky(void)
+HAL_StatusTypeDef checkComando(const uint8_t** check, uint8_t * comandoInput)
 {
-    HAL_GPIO_TogglePin(GPIOC,0xff);
-}
-
-void altern(void)
-{
-    static uint8_t pin=0;
-    pin ^=1; 
-    HAL_GPIO_WritePin(GPIOC,0xAA,pin);
-    HAL_GPIO_WritePin(GPIOC,~(0xAA),!pin);
-}
-
-void rolling(void)
-{
-    static uint8_t i = 128;
-    HAL_GPIO_WritePin(GPIOC,i,SET);
-    HAL_GPIO_WritePin(GPIOC,~(i),RESET);
-    i >>= 1;
-    if (i == 0)
+    HAL_StatusTypeDef flagTemp = HAL_BUSY;
+    for (uint8_t i = 0; i < 4; i++)
     {
-        i =128;
+        if (strcmp((const char *)check[i],(const char*)comandoInput) == 0)
+        {
+            flagTemp = HAL_OK;
+            break;
+        }
+        else
+        {
+            flagTemp = HAL_ERROR;
+        }
     }
-    
 
+    return flagTemp;
 }
 
-void kit(void)
+
+void DecToStr(uint8_t *buffer, int32_t val)
 {
-    const uint8_t sec[8] = {0x81,0x42,0x24,0x18,0x24,0x42,0x81};
-    static uint8_t i = 0;
-    HAL_GPIO_WritePin(GPIOC,sec[i],SET);
-    HAL_GPIO_WritePin(GPIOC,~(sec[i]),RESET);
-    i++;
-    if (i>=7)
+    uint8_t nElements = number_digits(val)+1;
+    uint8_t bufferTemp[nElements];
+    uint8_t i;
+    if (val < 0)
+    {   val *= (-1);
+        for (i = 1; i <= nElements; i++)
+        {
+            bufferTemp[nElements - i] =(uint8_t) ((val % 10UL) + '0');
+            val/=10;
+        }
+        bufferTemp[i - 1] = '\0';
+        bufferTemp[0] = '-';
+        strcpy((char *)buffer,(const char*)bufferTemp);
+    }
+    else
     {
-        i=0;
+        for (i = 1; i <= nElements; i++)
+        {
+            bufferTemp[nElements - i] =(uint8_t) ((val % 10UL) + '0');
+            val/=10;
+        }
+        bufferTemp[i - 1] = '\0';
+        strcpy((char *)buffer,(const char*)&bufferTemp[1]);
     }
-    
-}
 
-void car(void)
-{
-    static uint8_t i = 0;
-
-    HAL_GPIO_WritePin(GPIOC,0xC3,SET);
-    HAL_GPIO_WritePin(GPIOC,~(0xC3),RESET);
-    if (i>1)
-    {
-        
-        HAL_GPIO_WritePin(GPIOC,0x18,SET);
-        HAL_GPIO_WritePin(GPIOC,~(0x18),RESET);
-        i=0;
-    }
-    i++;
-}
-
-void none(void)
-{
-    HAL_GPIO_WritePin(GPIOC,0xFF,RESET);
     
 }
 
+uint8_t number_digits(int32_t num)
+{
+    uint8_t count = 0;
+
+    if (num < 0)
+    {
+        num *= (-1);
+    }
+    
+    while(num > 0)
+    {
+        count++;
+        num /= 10;
+    }
+
+    return count;
+}
