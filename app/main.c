@@ -39,9 +39,13 @@ __IO HAL_StatusTypeDef flag = HAL_OK;
 
 uint8_t RxByte;
 uint8_t RxBuffer[30] = {0};
-uint8_t RxBufferTemp[30] = {0};
-uint8_t dec[10] = {0};
+// uint8_t RxBufferTemp[30] = {0};
+// uint8_t dec[10] = {0};
 uint32_t tickTimer; 
+
+int32_t varA = 0;
+int32_t varB = 0;
+uint8_t operation = 0;
 
 void UART_Init(void);
 
@@ -58,76 +62,80 @@ int main( void )
 
         if (status == SET )
         {
-            strcpy((char*)RxBufferTemp,(const char*)RxBuffer);
+            
             status = RESET;
-            temp = strtok((char*)RxBufferTemp," "); 
+            temp = strtok((char*)RxBuffer," "); 
             
             if (temp != NULL)
             {
-                // for (uint8_t i = 0; i < 4; i++)
-                // {
-                //     if (strcmp((const char *)comando[i],temp) == 0)
-                //     {
-                //         flag = HAL_OK;
-                //         break;
-                //     }
-                //     else
-                //     {
-                //         flag = HAL_ERROR;
-                //     }
-                // }
-                // if (/*uartState &&*/ flag == HAL_OK)
-                // {
-                //     // uartState = RESET;
-                //     // sprintf(dec,"%d",number_digits(-2));
-                //     // DecToStr(dec,13);
-                //     // HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)dec,strlen_p(dec));
-                //     temp = strtok(NULL," ");
-                //     if (temp != NULL)
-                //     {
-                //         do
-                //         {
-                //             if (*temp >= '0' && *temp <= '9')
-                //             {
-                //                 flag = HAL_OK;
-                //             }
-                //             else
-                //             {
-                //                 flag = HAL_ERROR;
-                //                 break;
-                //             }
-                            
-                //             temp++;
-                            
-                //         } while (*temp == '\0');
+                varA = 0;
+                varB = 0;
+                if (checkComando(comando,(uint8_t*)temp,&operation) == HAL_OK)
+                {
+                    temp = strtok(NULL," ");
+                    if (temp != NULL)
+                    {
                         
-                //         // HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)temp,strlen_p(temp));
-                //     }
-                    
-                // }
-                // else if (uartState && flag == HAL_ERROR)
-                // {
-                //     uartState = RESET;
-                //     HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
-                //     temp = NULL;
-                // }
+                        if (checkCharDigit((uint8_t*)temp) == HAL_OK)
+                        {
+                            
+                            // varA = CharToDigit((uint8_t*)temp);
+                            varA = atoi((const char*)temp);
 
-                if (checkComando(comando,(uint8_t*)temp) == HAL_OK)
-                {
-                    HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgOk,strlen_p(msgOk));
+                        }
+                        else
+                        {
+                            flag = HAL_ERROR;
+                        }
+                    }
+                    temp = strtok(NULL," ");
+                    if (temp != NULL)
+                    {
+                        if (checkCharDigit((uint8_t*)temp) == HAL_OK)
+                        {
+                            // varB = CharToDigit((uint8_t*)temp);
+                            varB = atoi((const char*)temp);
+                            flag = HAL_OK;
+                        }
+                        else
+                        {
+                            flag = HAL_ERROR;
+                        }
+                    }
+                    else
+                    {
+                        flag = HAL_ERROR;
+                    }
+                    
+                    
                 }
-                else 
+                else
                 {
-                    HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
+                    flag = HAL_ERROR;
                 }                
                 
             }
         }
 
+        if (flag == HAL_ERROR)
+        {
+            flag = HAL_BUSY;
+            HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
+        }
+        
+
         if (HAL_GetTick() - tickTimer > 100)
         {
             tickTimer = HAL_GetTick();
             HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
+            if (flag == HAL_OK)
+            {
+                flag = HAL_BUSY;
+                operationMat(RxBuffer,varA,varB,operation);
+                HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)RxBuffer,strlen_p(RxBuffer));
+
+            }
+            
         }
         
         
