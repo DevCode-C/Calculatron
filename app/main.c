@@ -15,12 +15,6 @@ Brief.- Punto de entrada del programa
 -------------------------------------------------------------------------------------------------*/
 
 #define strlen_p(x) strlen((const char*)x)
-#define SPACE       32  //  "space -> ' ' "
-#define PER         42  //  " * "
-#define ADD         43  //  " + "
-#define MINUS       45  //  " - "
-#define DIV         47  //  " / "
-
 
 const uint8_t* msgError   =    (uint8_t*)"ERROR\n";
 const uint8_t* msgOk   =    (uint8_t*)"OK\n";
@@ -79,23 +73,8 @@ int main( void )
                         if (checkCharDigit((uint8_t*)temp) == HAL_OK)
                         {
                             
-                            // varA = CharToDigit((uint8_t*)temp);
-                            varA = atoi((const char*)temp);
-
-                        }
-                        else
-                        {
-                            flag = HAL_ERROR;
-                        }
-                    }
-                    temp = strtok(NULL," ");
-                    if (temp != NULL)
-                    {
-                        if (checkCharDigit((uint8_t*)temp) == HAL_OK)
-                        {
-                            // varB = CharToDigit((uint8_t*)temp);
-                            varB = atoi((const char*)temp);
-                            flag = HAL_OK;
+                            varA = CharToDigit((uint8_t*)temp);
+                            // varA = atoi(temp);
                         }
                         else
                         {
@@ -107,7 +86,24 @@ int main( void )
                         flag = HAL_ERROR;
                     }
                     
-                    
+                    temp = strtok(NULL," ");
+                    if ((temp != NULL) && (flag != HAL_ERROR))
+                    {
+                        if (checkCharDigit((uint8_t*)temp) == HAL_OK)
+                        {
+                            varB = CharToDigit((uint8_t*)temp);
+                            // varB = atoi(temp);
+                            flag = HAL_OK;
+                        }
+                        else
+                        {
+                            flag = HAL_ERROR;
+                        }
+                    }
+                    else
+                    {
+                        flag = HAL_ERROR;
+                    } 
                 }
                 else
                 {

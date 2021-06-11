@@ -112,30 +112,19 @@ HAL_StatusTypeDef checkComando(const uint8_t** check, uint8_t * comandoInput, ui
 
 HAL_StatusTypeDef checkCharDigit(uint8_t * charDigit)
 {
-    // uint8_t Charnumber = strlen((const char*)charDigit);
     HAL_StatusTypeDef flagNumber = HAL_BUSY;
     uint8_t i = 0;
     if (charDigit[0] == '-')
     {
         i++;
     }
+    else if (charDigit[0] == '\r')
+    {
+        charDigit[i] = '\0';
+        flagNumber = HAL_ERROR;
+    }
     
-    // for (; charDigit[i] != '\0'; i++)
-    // for (; i < Charnumber; i++)
-    // {
-    //     // if ((*charDigit >= '0' && *charDigit <= '9') || ((*charDigit == '-') || ((*charDigit == '\r'))))
-    //     if ((isdigit(charDigit[i])))
-    //     {
-    //         flagNumber = HAL_OK;
-    //     }
-    //     else
-    //     {
-    //         flagNumber = HAL_ERROR;
-    //         break;
-    //     }
-    //     // charDigit[i];
-    // }
-    while ( charDigit[i] != '\0')
+    while ( charDigit[i] != '\0' && flagNumber != HAL_ERROR)
     {
         if ((charDigit[i] >= '0' && charDigit[i] <= '9') )
         {
@@ -162,42 +151,27 @@ HAL_StatusTypeDef checkCharDigit(uint8_t * charDigit)
 
 int32_t CharToDigit(uint8_t* charDigit)
 {
-    // uint8_t Charnumber = strlen((const char*)charDigit);
-    // int32_t digTemp = 0;
-    // for (uint8_t i = 0; i < Charnumber; i++)
-    // {
-    //     if (charDigit[0] == '-')
-    //     {
-    //         i++;
-    //     }
-    //     digTemp = digTemp*10 + (*charDigit - '0');
-    //     charDigit++;
-    // }
-    // if (charDigit[0] == '-')
-    // {
-    //     return (digTemp*(-1));
-    // }
-    // else
-    // {
-    //     return digTemp;
-    // }
-        // Initialize result
-
-    int res = 0;
-    int sign = 1;
-
-    int i = 0;
-    if (charDigit[0] == '-') {
-
-        sign = -1;
+    uint8_t Charnumber = strlen((const char*)charDigit);
+    int32_t digTemp = 0;
+    uint8_t i = 0;
+    if (charDigit[0] == '-')
+    {
         i++;
-
     }
-    for (; charDigit[i] != '\0'; ++i)
 
-        res = res * 10 + charDigit[i] - '0';
-
-    return sign * res;
+    for (; i < Charnumber; i++)
+    {
+        
+        digTemp = digTemp*10 + (charDigit[i] - '0');
+    }
+    if (charDigit[0] == '-')
+    {
+        return (digTemp*(-1));
+    }
+    else
+    {
+        return digTemp;
+    }
 }
 
 
