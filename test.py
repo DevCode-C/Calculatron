@@ -117,17 +117,7 @@ def main():
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
-
-    # while True:
-    #     comando = input("Comando:" )
-    #     comando = comando + "\r"
-    #     port.write(comando.encode('utf8'))
-    #     # print(comando)
-    #     byteNumber = port.in_waiting
-    #     print(port.readline().decode('utf8'))
-    #     port.reset_input_buffer()
-        
+    print("OK")        
     port.close()
 
 if __name__ == "__main__":
