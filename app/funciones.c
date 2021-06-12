@@ -11,8 +11,8 @@
 
 void operationMat(uint8_t * buffer, int32_t A, int32_t B, uint8_t operation)
 {
-    uint8_t bufferTemp[30] = {0};
-    uint8_t bufferTempD[20] = {0};
+    uint8_t bufferTemp[40] = {0};
+    uint8_t bufferTempD[30] = {0};
     switch (operation)
     {
     case 0:
@@ -45,7 +45,7 @@ void operationMat(uint8_t * buffer, int32_t A, int32_t B, uint8_t operation)
         DecToStr(bufferTempD,(A-B));
         strcat((char*)bufferTemp, (const char*)bufferTempD);
         memset(bufferTempD,0,sizeof(bufferTempD));
-        strcat((char*)bufferTemp, " \r\n ");
+        strcat((char*)bufferTemp, "\r\n");
         strcat((char*)bufferTemp, "\0");
         strcpy((char*)buffer,(const char*)bufferTemp);
         // sprintf((char*)buffer,"%ld - %ld = %ld\n",A,B,(A-B));
@@ -190,6 +190,10 @@ void DecToStr(uint8_t *buffer, int32_t val)
         bufferTemp[i - 1] = '\0';
         bufferTemp[0] = '-';
         strcpy((char *)buffer,(const char*)bufferTemp);
+    }
+    else if(val == 0)
+    {
+        strcpy((char *)buffer,"0\0");
     }
     else
     {

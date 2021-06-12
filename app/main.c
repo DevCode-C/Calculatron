@@ -32,7 +32,7 @@ __IO HAL_StatusTypeDef flag = HAL_OK;
 
 
 uint8_t RxByte;
-uint8_t RxBuffer[30] = {0};
+uint8_t RxBuffer[50] = {0};
 // uint8_t RxBufferTemp[30] = {0};
 // uint8_t dec[10] = {0};
 uint32_t tickTimer; 
