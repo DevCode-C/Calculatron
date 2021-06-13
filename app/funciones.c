@@ -60,13 +60,14 @@ void operationMat(uint8_t * buffer, int32_t A, int32_t B, uint8_t operation)
         strcat((char*)bufferTemp, (const char*)bufferTempD);
         memset(bufferTempD,0,sizeof(bufferTempD));
         strcat((char*)bufferTemp, " = ");
-        DecToStr(bufferTempD,(A*B));
+        DecToStr(bufferTempD,A*B);
         strcat((char*)bufferTemp, (const char*)bufferTempD);
         memset(bufferTempD,0,sizeof(bufferTempD));
         strcat((char*)bufferTemp, " \r\n ");
         strcat((char*)bufferTemp, "\0");
         strcpy((char*)buffer,(const char*)bufferTemp);
         // sprintf((char*)buffer,"%ld * %ld = %ld\n",A,B,(A*B));
+
         break;
 
     case 3:

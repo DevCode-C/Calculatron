@@ -48,7 +48,7 @@ int main( void )
 {
     HAL_Init( );
     UART_Init();
-
+    
     char *temp = NULL;
     tickTimer = HAL_GetTick();
     for (; ;)

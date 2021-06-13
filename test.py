@@ -27,8 +27,8 @@ def main():
     print("Test SUM ...",end="\t", flush=True)
     for _ in range(iteraciones):   
 
-        varA = random.randint(-100,100)
-        varB = random.randint(-100,100)
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
         Resultado = varA + varB
         comando =  "SUM " + str(varA) + " " + str(varB) + "\r"
         port.write(comando.encode('utf8'))
@@ -50,8 +50,8 @@ def main():
     print("Test SUB ...",end="\t", flush=True)
     for _ in range(iteraciones):   
 
-        varA = random.randint(-100,100)
-        varB = random.randint(-100,100)
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
         Resultado = varA - varB
         comando =  "SUB " + str(varA) + " " + str(varB) + "\r"
         port.write(comando.encode('utf8'))
@@ -73,8 +73,8 @@ def main():
     print("Test MUL ...",end="\t", flush=True)
     for _ in range(iteraciones):   
 
-        varA = random.randint(-100,100)
-        varB = random.randint(-100,100)
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
         Resultado = varA * varB
         comando =  "MUL " + str(varA) + " " + str(varB) + "\r"
         port.write(comando.encode('utf8'))
@@ -96,8 +96,8 @@ def main():
     print("Test DIV ...",end="\t", flush=True)
     for _ in range(iteraciones):   
 
-        varA = random.randint(-100,100)
-        varB = random.randint(-100,100)
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
         if varB == 0:
             Resultado = 0
         else:
