@@ -73,7 +73,7 @@ void operationMat(uint8_t * buffer, int32_t A, int32_t B, uint8_t operation)
     case 3:
         if (B == 0)
         {
-            strcpy((char*)buffer,"ERROR\r\n\0");
+            strcpy((char*)buffer,"ERROR\r\n");
         }
         else
         {

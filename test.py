@@ -97,7 +97,7 @@ def main():
     for _ in range(iteraciones):   
 
         varA = random.randint(-1000,1000)
-        varB = random.randint(-1000,1000)
+        varB = random.randint(0,1)
         if varB == 0:
             Resultado = 0
         else:
@@ -106,6 +106,10 @@ def main():
         port.write(comando.encode('utf8'))
         byteNumber = port.in_waiting
         stringInput = port.readline().decode('utf8')
+        # print(comando)
+        # print(Resultado, end= '\t',flush= True)
+        # print(stringInput)
+
         if varB == 0:
             if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
                 pass

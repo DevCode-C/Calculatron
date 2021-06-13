@@ -16,7 +16,7 @@ Brief.- Punto de entrada del programa
 
 #define strlen_p(x) strlen((const char*)x)
 
-const uint8_t* msgError   =    (uint8_t*)"ERROR\n";
+const uint8_t* msgError   =    (uint8_t*)"ERROR\r\n";
 const uint8_t* msgOk   =    (uint8_t*)"OK\n";
 
 const uint8_t* comando[4] =    {(uint8_t*)"SUM",
@@ -72,7 +72,6 @@ int main( void )
                         
                         if (checkCharDigit((uint8_t*)temp) == HAL_OK)
                         {
-                            
                             varA = CharToDigit((uint8_t*)temp);
                             // varA = atoi(temp);
                         }
@@ -94,6 +93,11 @@ int main( void )
                             varB = CharToDigit((uint8_t*)temp);
                             // varB = atoi(temp);
                             flag = HAL_OK;
+                            temp = strtok(NULL," ");
+                            if (temp != NULL)
+                            {
+                                flag = HAL_ERROR;
+                            }
                         }
                         else
                         {
@@ -118,19 +122,18 @@ int main( void )
             flag = HAL_BUSY;
             HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)msgError,strlen_p(msgError));
         }
-        
+        else if (flag == HAL_OK)
+        {
+            flag = HAL_BUSY;
+            operationMat(RxBuffer,varA,varB,operation);
+            HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)RxBuffer,strlen_p(RxBuffer));
+        }
+
 
         if (HAL_GetTick() - tickTimer > 100)
         {
             tickTimer = HAL_GetTick();
             HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
-            if (flag == HAL_OK)
-            {
-                flag = HAL_BUSY;
-                operationMat(RxBuffer,varA,varB,operation);
-                HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)RxBuffer,strlen_p(RxBuffer));
-
-            }
             
         }
         
