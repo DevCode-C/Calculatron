@@ -34,7 +34,7 @@ def main():
         port.write(comando.encode('utf8'))
         byteNumber = port.in_waiting
         stringInput = port.readline().decode('utf8')
-        if stringInput == "ERROR":
+        if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
             print("Test FAIL")
             sys.exit()
         stringInput = stringInput.split('=')
@@ -57,7 +57,7 @@ def main():
         port.write(comando.encode('utf8'))
         byteNumber = port.in_waiting
         stringInput = port.readline().decode('utf8')
-        if stringInput == "ERROR":
+        if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
             print("Test FAIL")
             sys.exit()
         stringInput = stringInput.split('=')
@@ -80,7 +80,7 @@ def main():
         port.write(comando.encode('utf8'))
         byteNumber = port.in_waiting
         stringInput = port.readline().decode('utf8')
-        if stringInput == "ERROR":
+        if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
             print("Test FAIL")
             sys.exit()
         stringInput = stringInput.split('=')
@@ -106,16 +106,24 @@ def main():
         port.write(comando.encode('utf8'))
         byteNumber = port.in_waiting
         stringInput = port.readline().decode('utf8')
-        if stringInput == "ERROR":
-            print("Test FAIL")
-            sys.exit()
-        stringInput = stringInput.split('=')
-        # print (stringInput[1])clear
-        resultInput = int(stringInput[1])
-        # print(f"Entrada: {stringInput[0]}, Resultado: {stringInput[1]}\t ResultadoInput: {resultInput}, Resultado P: {Resultado}")
-        if resultInput != Resultado:
-            print("Test FAIL")
-            sys.exit()
+        if varB == 0:
+            if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
+                pass
+            else:
+                print("Test FAIL")
+                sys.exit()
+
+        else:
+            if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
+                print("Test FAIL")
+                sys.exit()
+            stringInput = stringInput.split('=')
+            # print (stringInput[1])clear
+            resultInput = int(stringInput[1])
+            # print(f"Entrada: {stringInput[0]}, Resultado: {stringInput[1]}\t ResultadoInput: {resultInput}, Resultado P: {Resultado}")
+            if resultInput != Resultado:
+                print("Test FAIL")
+                sys.exit()
 
     print("OK")        
     port.close()
