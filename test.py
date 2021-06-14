@@ -27,7 +27,7 @@ def sum(iteraciones, port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def sub(iteraciones,port):
     print("Test SUB ...",end="\t", flush=True)
@@ -51,7 +51,7 @@ def sub(iteraciones,port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def mul(iteraciones,port):
     print("Test MUL ...",end="\t", flush=True)
@@ -75,7 +75,7 @@ def mul(iteraciones,port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def div(iteraciones,port):
     print("Test DIV ...",end="\t", flush=True)
@@ -112,7 +112,7 @@ def div(iteraciones,port):
             if resultInput != Resultado:
                 print("Test FAIL")
                 sys.exit()
-    print("OK")    
+    print("PASS")    
 
 def erTest1(iteraciones,port):
     print("Test Erros ...",end="\t", flush=True)
@@ -136,7 +136,7 @@ def erTest1(iteraciones,port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def erTest2(iteraciones,port):
     print("Test Erros ...",end="\t", flush=True)
@@ -157,7 +157,7 @@ def erTest2(iteraciones,port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def erTest3(iteraciones,port):
     print("Test Erros ...",end="\t", flush=True)
@@ -178,7 +178,7 @@ def erTest3(iteraciones,port):
             print("Test FAIL")
             sys.exit()
 
-    print("OK")
+    print("PASS")
 
 def main():
     iteraciones = int(sys.argv[1])
