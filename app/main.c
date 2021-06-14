@@ -33,8 +33,6 @@ __IO HAL_StatusTypeDef flag = HAL_OK;
 
 uint8_t RxByte;
 uint8_t RxBuffer[50] = {0};
-// uint8_t RxBufferTemp[30] = {0};
-// uint8_t dec[10] = {0};
 uint32_t tickTimer; 
 
 int32_t varA = 0;
@@ -60,7 +58,7 @@ int main( void )
             varB = 0;
             status = RESET;
             temp = strtok((char*)RxBuffer," "); 
-            
+            flag = HAL_ERROR;
             if (temp != NULL)
             {
                 flag = HAL_ERROR;
@@ -75,18 +73,15 @@ int main( void )
                         {
                             varA = CharToDigit((uint8_t*)temp);
                             flag = HAL_OK;
-                            // varA = atoi(temp);
                         }
                     }
                     temp = strtok(NULL," ");
-                    // flag = HAL_BUSY;
                     if ((temp != NULL) && (flag != HAL_ERROR))
                     {
                         flag = HAL_ERROR;
                         if (checkCharDigit((uint8_t*)temp) == HAL_OK)
                         {
                             varB = CharToDigit((uint8_t*)temp);
-                            // varB = atoi(temp);
                             flag = HAL_OK;
                             temp = strtok(NULL," ");
                             if (temp != NULL)
