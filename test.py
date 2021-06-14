@@ -114,31 +114,7 @@ def div(iteraciones,port):
                 sys.exit()
     print("OK")    
 
-def main():
-    iteraciones = int(sys.argv[1])
-    # print(iteraciones)
-    # portList = list(serial.tools.list_ports.comports())
-    # for i in range(0,10):
-    #     try:
-    #         print(portList[i])
-    #     except:
-    #         break
-    # port = Serial()
-    port = serial.Serial()
-    # portSeleted = input("Selecciona el puerto:\t")
-    port.port = "COM9"
-    # print(portSeleted)
-
-    # portBaud = input("Selecciona el BaudRate:\t")
-    port.baudrate = 115200
-    # print(int(portBaud))
-    port.open()
-
-    sum(iteraciones,port)
-    sub(iteraciones,port)
-    mul(iteraciones,port)
-    div(iteraciones,port)
-    
+def erTest1(iteraciones,port):
     print("Test Erros ...",end="\t", flush=True)
     for _ in range(iteraciones):
         varA = random.randint(-1000,1000)
@@ -161,6 +137,80 @@ def main():
             sys.exit()
 
     print("OK")
+
+def erTest2(iteraciones,port):
+    print("Test Erros ...",end="\t", flush=True)
+    for _ in range(iteraciones):
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
+        sel  = random.randint(0,3)
+        letters = "abcdeslkadasjlkjkzxcbmawAKJHWUUDASIJDSAOAWMBHASDKOOPKAS"
+        comandoCorrect = [str("SUM "), str("SUB "), str("MUL "), str("DIV ")]
+        
+        comando =  comandoCorrect[sel] + letters[random.randint(0,54)] + str(varA) + " " + str(varB) + letters[random.randint(0,54)] + "\r"
+        port.write(comando.encode('utf8'))
+        byteNumber = port.in_waiting
+        stringInput = port.readline().decode('utf8')
+        if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
+            pass
+        else:
+            print("Test FAIL")
+            sys.exit()
+
+    print("OK")
+
+def erTest3(iteraciones,port):
+    print("Test Erros ...",end="\t", flush=True)
+    for _ in range(iteraciones):
+        varA = random.randint(-1000,1000)
+        varB = random.randint(-1000,1000)
+        sel  = random.randint(0,3)
+        letters = "abcdeslkadasjlkjkzxcbmawAKJHWUUDASIJDSAOAWMBHASDKOOPKAS"
+        comandoCorrect = [str("SUM "), str("SUB "), str("MUL "), str("DIV ")]
+        
+        comando =  comandoCorrect[sel] + str(varA) + " " + str(varB) + letters[random.randint(0,54)] + "\r"
+        port.write(comando.encode('utf8'))
+        byteNumber = port.in_waiting
+        stringInput = port.readline().decode('utf8')
+        if (stringInput == str(" ERROR\r\n")) or (stringInput == str("ERROR\r\n")):
+            pass
+        else:
+            print("Test FAIL")
+            sys.exit()
+
+    print("OK")
+
+def main():
+    iteraciones = int(sys.argv[1])
+    # print(iteraciones)
+    portList = list(serial.tools.list_ports.comports())
+    for i in range(0,10):
+        try:
+            print(portList[i])
+        except:
+            break
+    # port = Serial()
+    port = serial.Serial()
+    portSeleted = input("Selecciona el puerto:\t")
+    # port.port = "COM9"
+    port.port = str(portSeleted)
+    # print(portSeleted)
+
+    portBaud = input("Selecciona el BaudRate:\t")
+    # port.baudrate = 115200
+    port.baudrate = int(portBaud)
+    # print(int(portBaud))
+    port.open()
+
+    sum(iteraciones,port)
+    sub(iteraciones,port)
+    mul(iteraciones,port)
+    div(iteraciones,port)
+    erTest1(iteraciones,port)
+    erTest2(iteraciones,port)
+    erTest3(iteraciones,port)
+    
+    
     
     port.close()
 

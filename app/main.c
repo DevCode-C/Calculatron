@@ -66,7 +66,7 @@ int main( void )
                 flag = HAL_ERROR;
                 if (checkComando(comando,(uint8_t*)temp,&operation) == HAL_OK)
                 {
-                    flag = HAL_BUSY;
+                    flag = HAL_ERROR;
                     temp = strtok(NULL," ");
                     if (temp != NULL)
                     {
@@ -78,13 +78,8 @@ int main( void )
                             // varA = atoi(temp);
                         }
                     }
-                    else
-                    {
-                        flag = HAL_ERROR;
-                    }
-                    
                     temp = strtok(NULL," ");
-                    flag = HAL_BUSY;
+                    // flag = HAL_BUSY;
                     if ((temp != NULL) && (flag != HAL_ERROR))
                     {
                         flag = HAL_ERROR;
@@ -115,7 +110,6 @@ int main( void )
             operationMat(RxBuffer,varA,varB,operation);
             HAL_UART_Transmit_IT(&UartHandle,(uint8_t*)RxBuffer,strlen_p(RxBuffer));
         }
-
 
         if (HAL_GetTick() - tickTimer > 100)
         {
