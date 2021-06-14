@@ -56,28 +56,26 @@ int main( void )
 
         if (status == SET )
         {
-            
+            varA = 0;
+            varB = 0;
             status = RESET;
             temp = strtok((char*)RxBuffer," "); 
             
             if (temp != NULL)
             {
-                varA = 0;
-                varB = 0;
+                flag = HAL_ERROR;
                 if (checkComando(comando,(uint8_t*)temp,&operation) == HAL_OK)
                 {
+                    flag = HAL_BUSY;
                     temp = strtok(NULL," ");
                     if (temp != NULL)
                     {
-                        
+                        flag = HAL_ERROR;
                         if (checkCharDigit((uint8_t*)temp) == HAL_OK)
                         {
                             varA = CharToDigit((uint8_t*)temp);
+                            flag = HAL_OK;
                             // varA = atoi(temp);
-                        }
-                        else
-                        {
-                            flag = HAL_ERROR;
                         }
                     }
                     else
@@ -86,8 +84,10 @@ int main( void )
                     }
                     
                     temp = strtok(NULL," ");
+                    flag = HAL_BUSY;
                     if ((temp != NULL) && (flag != HAL_ERROR))
                     {
+                        flag = HAL_ERROR;
                         if (checkCharDigit((uint8_t*)temp) == HAL_OK)
                         {
                             varB = CharToDigit((uint8_t*)temp);
@@ -99,21 +99,8 @@ int main( void )
                                 flag = HAL_ERROR;
                             }
                         }
-                        else
-                        {
-                            flag = HAL_ERROR;
-                        }
                     }
-                    else
-                    {
-                        flag = HAL_ERROR;
-                    } 
-                }
-                else
-                {
-                    flag = HAL_ERROR;
                 }                
-                
             }
         }
 
